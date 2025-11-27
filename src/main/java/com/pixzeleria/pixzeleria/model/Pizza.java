@@ -9,20 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Pizza {
+public class Pizza extends Product{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String name;
-
-    @ManyToMany
-    @JoinTable(
-            name = "pizza_ingredients",
-            joinColumns = @JoinColumn(name = "pizza_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-    )
-    private List<Ingredient> ingredientList;
+    private String size;
+    private List<Ingredient> ingredients;
 
 }
