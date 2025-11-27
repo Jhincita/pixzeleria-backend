@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+    container_name: pixzeleria-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pixdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+
+  db:
+    image: postgres:16
+    container_name: pixzeleria-db
+    environment:
+      POSTGRES_DB: pixdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
