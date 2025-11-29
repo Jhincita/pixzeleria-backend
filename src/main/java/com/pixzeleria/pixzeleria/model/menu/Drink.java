@@ -1,4 +1,4 @@
-package com.pixzeleria.pixzeleria.model;
+package com.pixzeleria.pixzeleria.model.menu;
 
 import jakarta.persistence.Entity;
 import lombok.Getter;

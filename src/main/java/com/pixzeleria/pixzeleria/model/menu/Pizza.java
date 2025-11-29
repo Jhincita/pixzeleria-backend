@@ -1,26 +1,23 @@
-package com.pixzeleria.pixzeleria.model;
+package com.pixzeleria.pixzeleria.model.menu;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-public class Pizza {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Table(name = "pizza")
+public class Pizza extends Product {
 
     private String name;
-
     @ManyToMany
     @JoinTable(
-            name = "pizza_ingredients",
+            name = "pizza_ingredient",
             joinColumns = @JoinColumn(name = "pizza_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
-    private List<Ingredient> ingredientList;
+    private List<Ingredient> ingredients;
 }
