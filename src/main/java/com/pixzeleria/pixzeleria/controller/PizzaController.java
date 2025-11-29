@@ -1,4 +1,7 @@
-import com.pixzeleria.pixzeleria.model.Pizza;
+package com.pixzeleria.pixzeleria.controller;
+
+import com.pixzeleria.pixzeleria.dto.PizzaDTO;
+import com.pixzeleria.pixzeleria.model.menu.Pizza;
 import com.pixzeleria.pixzeleria.service.PizzaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +32,11 @@ public class PizzaController {
 
     // Guardar nueva pipsha
     @PostMapping
-    public ResponseEntity<Pizza> createPizza(@RequestBody Pizza pizza) {
+    public ResponseEntity<Pizza> createPizza(@RequestBody PizzaDTO pizza) {
         return ResponseEntity.ok(pizzaService.savePizza(pizza));
     }
 
-    @PostMapping
-    public ResponseEntity<Pizza> createPizza(@RequestBody PizzaDTO dto) {
-        // Le pasamos el DTO al servicio
-        return ResponseEntity.ok(pizzaService.savePizza(dto)); 
-    }
+
     
     // Eliminar pizza
     @DeleteMapping("/{id}")

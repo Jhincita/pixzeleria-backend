@@ -21,7 +21,6 @@ public class Client {
 
     // Store the hash ONLY — you hash it in your service
     private String password;
-
     private String firstName;
     private String lastName;
 }

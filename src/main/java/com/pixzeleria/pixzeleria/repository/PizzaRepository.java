@@ -1,6 +1,6 @@
 package com.pixzeleria.pixzeleria.repository;
 
-import com.pixzeleria.pixzeleria.model.Pizza;
+import com.pixzeleria.pixzeleria.model.menu.Pizza;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
