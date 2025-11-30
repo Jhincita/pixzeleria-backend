@@ -1,13 +1,8 @@
 package com.pixzeleria.pixzeleria.service;
 
 import com.pixzeleria.pixzeleria.dto.PizzaDTO;
-<<<<<<< HEAD
-import com.pixzeleria.pixzeleria.model.Ingredient;
-import com.pixzeleria.pixzeleria.model.Pizza;
-=======
 import com.pixzeleria.pixzeleria.model.menu.Ingredient;
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
->>>>>>> fixedschema
 import com.pixzeleria.pixzeleria.repository.IngredientRepository;
 import com.pixzeleria.pixzeleria.repository.PizzaRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +29,8 @@ public class PizzaService {
     public Pizza savePizza(PizzaDTO pizzaDTO) {
         Pizza pizza = new Pizza();
         pizza.setName(pizzaDTO.getName());
-
-        // Convertimos la lista de IDs (números) en lista de Ingredientes (objetos)
-        // Buscamos en la base de datos todos los ingredientes que coincidan con los IDs
         List<Ingredient> ingredients = ingredientRepository.findAllById(pizzaDTO.getIngredientIds());
-<<<<<<< HEAD
-        pizza.setIngredientList(ingredients);
-=======
         pizza.setIngredients(ingredients);
->>>>>>> fixedschema
         return pizzaRepository.save(pizza);
     }
     

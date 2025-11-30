@@ -1,13 +1,15 @@
 package com.pixzeleria.pixzeleria.dto;
 
+import com.pixzeleria.pixzeleria.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ClientDTO {
+public class UserDTO {
     private String username;
     private String password;
     private String firstName;
     private String lastName;
+    private Role role;
 }

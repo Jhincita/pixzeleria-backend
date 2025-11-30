@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 public class OrderPizza extends OrderItem {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Pizza basePizza; // The menu pizza selected
 
     @OneToMany(mappedBy = "orderPizza", cascade = CascadeType.ALL, orphanRemoval = true)
