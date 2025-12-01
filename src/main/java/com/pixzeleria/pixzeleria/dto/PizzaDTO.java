@@ -8,5 +8,9 @@ import java.util.List;
 @Setter
 public class PizzaDTO {
     private String name;
-    private List<Long> ingredientIds;
+    private Double basePrice;
+    private String size;
+    private List<IngredientDTO> ingredients;
+    private int totalPrice;
 }
+

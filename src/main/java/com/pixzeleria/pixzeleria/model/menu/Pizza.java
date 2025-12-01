@@ -20,4 +20,6 @@ public class Pizza extends Product {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private List<Ingredient> ingredients;
+    private String size; // Size in centimeters
+    private int price;
 }

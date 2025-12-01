@@ -10,6 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -22,32 +27,56 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) 
-            .authorizeHttpRequests(auth -> auth
-                // Zona pública
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                
-                // Pa que me deje entrar al panel del H2
-                .requestMatchers("/h2-console/**").permitAll() 
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
 
-                // Roles
-                .requestMatchers(HttpMethod.GET, "/api/v1/orders").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/pizzas/**", "/api/v1/ingredients/**").hasAnyAuthority("VENDEDOR", "ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/pizzas/**", "/api/v1/ingredients/**").hasAnyAuthority("VENDEDOR", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasAuthority("ADMIN")
 
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            
-            // Esto es pa ver la consola H2
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+
+                        // ✅ ADD THESE LINES - Allow public access to clients and pizzas
+                        .requestMatchers("/api/clients/**").permitAll()
+                        .requestMatchers("/api/pizzas/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+
+                        // Original rules
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/pizzas/**", "/api/v1/ingredients/**")
+                        .hasAnyAuthority("VENDEDOR", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/pizzas/**", "/api/v1/ingredients/**")
+                        .hasAnyAuthority("VENDEDOR", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/**")
+                        .hasAuthority("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Allow specific origins
+        config.setAllowedOriginPatterns(List.of("*")); // Allow all for development
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("*"));
+        config.setAllowCredentials(true); // Allow credentials
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 }

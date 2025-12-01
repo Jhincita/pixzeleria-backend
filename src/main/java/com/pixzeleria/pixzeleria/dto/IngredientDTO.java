@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IngredientDTO {
-
     private String name;
-    private Integer stock;
+    private int stock;
 }
