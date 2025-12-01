@@ -29,9 +29,6 @@ public class PizzaService {
     public Pizza savePizza(PizzaDTO pizzaDTO) {
         Pizza pizza = new Pizza();
         pizza.setName(pizzaDTO.getName());
-
-        // Convertimos la lista de IDs (números) en lista de Ingredientes (objetos)
-        // Buscamos en la base de datos todos los ingredientes que coincidan con los IDs
         List<Ingredient> ingredients = ingredientRepository.findAllById(pizzaDTO.getIngredientIds());
         pizza.setIngredients(ingredients);
         return pizzaRepository.save(pizza);

@@ -1,7 +1,10 @@
 package com.pixzeleria.pixzeleria.model.order;
 
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +15,7 @@ import java.util.List;
 @Entity
 public class OrderPizza extends OrderItem {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Pizza basePizza; // The menu pizza selected
 
     @OneToMany(mappedBy = "orderPizza", cascade = CascadeType.ALL, orphanRemoval = true)

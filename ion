@@ -1,0 +1,166 @@
+[1mdiff --git a/pom.xml b/pom.xml[m
+[1mindex e786bda..e91968b 100644[m
+[1m--- a/pom.xml[m
+[1m+++ b/pom.xml[m
+[36m@@ -1,48 +1,42 @@[m
+ <?xml version="1.0" encoding="UTF-8"?>[m
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"[m
+[31m-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">[m
+[32m+[m		[32m xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">[m
+ 	<modelVersion>4.0.0</modelVersion>[m
+[32m+[m
+ 	<parent>[m
+ 		<groupId>org.springframework.boot</groupId>[m
+ 		<artifactId>spring-boot-starter-parent</artifactId>[m
+[31m-		<version>4.0.0</version>[m
+[31m-		<relativePath/> <!-- lookup parent from repository -->[m
+[32m+[m		[32m<version>3.3.5</version>[m
+[32m+[m		[32m<relativePath/>[m
+ 	</parent>[m
+[32m+[m
+ 	<groupId>com.pixzeleria</groupId>[m
+ 	<artifactId>pixzeleria</artifactId>[m
+ 	<version>0.0.1-SNAPSHOT</version>[m
+ 	<name>pixzeleria</name>[m
+[31m-	<description>Pixzeleria web</description>[m
+[31m-	<url/>[m
+[31m-	<licenses>[m
+[31m-		<license/>[m
+[31m-	</licenses>[m
+[31m-	<developers>[m
+[31m-		<developer/>[m
+[31m-	</developers>[m
+[31m-	<scm>[m
+[31m-		<connection/>[m
+[31m-		<developerConnection/>[m
+[31m-		<tag/>[m
+[31m-		<url/>[m
+[31m-	</scm>[m
+[32m+[m	[32m<description>Backend para la Pixzelería</description>[m
+[32m+[m
+ 	<properties>[m
+ 		<java.version>17</java.version>[m
+[32m+[m		[32m<lombok.version>1.18.34</lombok.version>[m
+[32m+[m		[32m<maven.compiler.source>17</maven.compiler.source>[m
+[32m+[m		[32m<maven.compiler.target>17</maven.compiler.target>[m
+ 	</properties>[m
+[32m+[m
+ 	<dependencies>[m
+ 		<dependency>[m
+ 			<groupId>org.springframework.boot</groupId>[m
+ 			<artifactId>spring-boot-starter-data-jpa</artifactId>[m
+ 		</dependency>[m
+[32m+[m
+ 		<dependency>[m
+ 			<groupId>org.springframework.boot</groupId>[m
+[31m-			<artifactId>spring-boot-starter-webmvc</artifactId>[m
+[32m+[m			[32m<artifactId>spring-boot-starter-security</artifactId>[m
+ 		</dependency>[m
+ [m
+[31m-<!--		SECURITY FOR HASH PASSWORDS -->[m
+ 		<dependency>[m
+ 			<groupId>org.springframework.boot</groupId>[m
+[31m-			<artifactId>spring-boot-starter-security</artifactId>[m
+[32m+[m			[32m<artifactId>spring-boot-starter-web</artifactId>[m
+ 		</dependency>[m
+ [m
+ 		<dependency>[m
+[36m@@ -50,36 +44,69 @@[m
+ 			<artifactId>postgresql</artifactId>[m
+ 			<scope>runtime</scope>[m
+ 		</dependency>[m
+[32m+[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>com.h2database</groupId>[m
+[32m+[m			[32m<artifactId>h2</artifactId>[m
+[32m+[m			[32m<scope>runtime</scope>[m
+[32m+[m		[32m</dependency>[m
+[32m+[m
+ 		<dependency>[m
+ 			<groupId>org.projectlombok</groupId>[m
+ 			<artifactId>lombok</artifactId>[m
+[31m-			<optional>true</optional>[m
+[32m+[m			[32m<version>${lombok.version}</version>[m
+[32m+[m			[32m<scope>provided</scope>[m
+[32m+[m		[32m</dependency>[m
+[32m+[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>io.jsonwebtoken</groupId>[m
+[32m+[m			[32m<artifactId>jjwt-api</artifactId>[m
+[32m+[m			[32m<version>0.11.5</version>[m
+[32m+[m		[32m</dependency>[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>io.jsonwebtoken</groupId>[m
+[32m+[m			[32m<artifactId>jjwt-impl</artifactId>[m
+[32m+[m			[32m<version>0.11.5</version>[m
+[32m+[m			[32m<scope>runtime</scope>[m
+ 		</dependency>[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>io.jsonwebtoken</groupId>[m
+[32m+[m			[32m<artifactId>jjwt-jackson</artifactId>[m
+[32m+[m			[32m<version>0.11.5</version>[m
+[32m+[m			[32m<scope>runtime</scope>[m
+[32m+[m		[32m</dependency>[m
+[32m+[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>org.springdoc</groupId>[m
+[32m+[m			[32m<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>[m
+[32m+[m			[32m<version>2.2.0</version>[m
+[32m+[m		[32m</dependency>[m
+[32m+[m
+ 		<dependency>[m
+ 			<groupId>org.springframework.boot</groupId>[m
+[31m-			<artifactId>spring-boot-starter-data-jpa-test</artifactId>[m
+[32m+[m			[32m<artifactId>spring-boot-starter-test</artifactId>[m
+ 			<scope>test</scope>[m
+ 		</dependency>[m
+ 		<dependency>[m
+[31m-			<groupId>org.springframework.boot</groupId>[m
+[31m-			<artifactId>spring-boot-starter-webmvc-test</artifactId>[m
+[32m+[m			[32m<groupId>org.springframework.security</groupId>[m
+[32m+[m			[32m<artifactId>spring-security-test</artifactId>[m
+ 			<scope>test</scope>[m
+ 		</dependency>[m
+ 	</dependencies>[m
+ [m
+ 	<build>[m
+[31m-[m
+ 		<plugins>[m
+ 			<plugin>[m
+ 				<groupId>org.apache.maven.plugins</groupId>[m
+ 				<artifactId>maven-compiler-plugin</artifactId>[m
+[32m+[m				[32m<version>3.11.0</version>[m
+ 				<configuration>[m
+[31m-					<annotationProcessorPaths>[m
+[31m-						<path>[m
+[31m-							<groupId>org.projectlombok</groupId>[m
+[31m-							<artifactId>lombok</artifactId>[m
+[31m-						</path>[m
+[31m-					</annotationProcessorPaths>[m
+[32m+[m					[32m<source>17</source>[m
+[32m+[m					[32m<target>17</target>[m
+[32m+[m					[32m<fork>true</fork>[m
+[32m+[m					[32m<compilerArgs>[m
+[32m+[m						[32m<arg>-parameters</arg>[m
+[32m+[m					[32m</compilerArgs>[m
+ 				</configuration>[m
+ 			</plugin>[m
+ 			<plugin>[m
+[36m@@ -94,15 +121,6 @@[m
+ 					</excludes>[m
+ 				</configuration>[m
+ 			</plugin>[m
+[31m-			<plugin>[m
+[31m-				<groupId>org.apache.maven.plugins</groupId>[m
+[31m-				<artifactId>maven-surefire-plugin</artifactId>[m
+[31m-				<version>3.0.0-M9</version>[m
+[31m-				<configuration>[m
+[31m-					<skipTests>true</skipTests>[m
+[31m-				</configuration>[m
+[31m-			</plugin>[m
+ 		</plugins>[m
+ 	</build>[m
+[31m-[m
+[31m-</project>[m
+[32m+[m[32m</project>[m
+\ No newline at end of file[m

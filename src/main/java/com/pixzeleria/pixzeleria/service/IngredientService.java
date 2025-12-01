@@ -1,7 +1,6 @@
 package com.pixzeleria.pixzeleria.service;
 
 
-import com.pixzeleria.pixzeleria.dto.IngredientDTO;
 import com.pixzeleria.pixzeleria.model.menu.Ingredient;
 import com.pixzeleria.pixzeleria.repository.IngredientRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class IngredientService {
     // crud
 
     // create
-    public Ingredient save(IngredientDTO dto) {
+    public Ingredient save(Ingredient dto) {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(dto.getName());
         ingredient.setStock(dto.getStock());
@@ -35,5 +34,8 @@ public class IngredientService {
         return repository.findById(id).orElse(null);
     }
     //
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
 
 }

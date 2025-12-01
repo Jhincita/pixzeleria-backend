@@ -10,4 +10,3 @@ public class PizzaDTO {
     private String name;
     private List<Long> ingredientIds;
 }
-

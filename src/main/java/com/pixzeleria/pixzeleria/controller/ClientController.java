@@ -1,40 +1,39 @@
 package com.pixzeleria.pixzeleria.controller;
 
-import com.pixzeleria.pixzeleria.dto.ClientDTO;
-import com.pixzeleria.pixzeleria.model.Client;
+import com.pixzeleria.pixzeleria.model.user.ClientProfile;
 import com.pixzeleria.pixzeleria.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/clients")
+@RequiredArgsConstructor
 public class ClientController {
 
-    private final ClientService service;
+    private final ClientService clientService;
 
-    // create
-    @PostMapping
-    public ResponseEntity<Client> addClient(@RequestBody ClientDTO dto) {
-        return ResponseEntity.ok(service.register(dto));
+    @PostMapping("/{userId}/profile")
+    public ResponseEntity<ClientProfile> addClientProfile(@PathVariable Long userId,
+                                                          @RequestParam int loyaltyPoints) {
+        return ResponseEntity.ok(clientService.create(userId, loyaltyPoints));
     }
-    //read
+
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity<ClientProfile> getClientProfile(@PathVariable Long userId) {
+        return ResponseEntity.of(clientService.getByUser(userId));
+    }
+
     @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        return ResponseEntity.ok(service.getAllClients());
+    public ResponseEntity<List<ClientProfile>> getAllClients() {
+        return ResponseEntity.ok(clientService.getAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable Long id) {
-        return service.getClientById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClientProfile(@PathVariable Long id) {
+        clientService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-
-
 }

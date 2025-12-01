@@ -1,6 +1,6 @@
 package com.pixzeleria.pixzeleria.model.order;
 
-import com.pixzeleria.pixzeleria.model.Client;
+import com.pixzeleria.pixzeleria.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +18,9 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Client client;
+    @JoinColumn(name = "user_id")
+    private User client;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
-
-
 }

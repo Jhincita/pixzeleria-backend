@@ -1,4 +1,4 @@
-package com.pixzeleria.pixzeleria.model.menu;
+package com.pixzeleria.pixzeleria.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,12 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Ingredient {
-
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private int stock;
 }
