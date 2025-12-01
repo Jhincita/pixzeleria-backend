@@ -35,8 +35,12 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
 
+    private String run;
+    private String status;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+    
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,5 +75,21 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true; // El usuario siempre está habilitado
+    }
+
+    public String getRun() {
+        return run;
+    }
+
+    public void setRun(String run) {
+        this.run = run;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

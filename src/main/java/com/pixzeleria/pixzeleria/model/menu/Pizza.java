@@ -12,8 +12,7 @@ import java.util.List;
 @Table(name = "pizza")
 public class Pizza extends Product {
 
-    private String name;
-    @ManyToMany
+   @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "pizza_ingredient",
             joinColumns = @JoinColumn(name = "pizza_id"),

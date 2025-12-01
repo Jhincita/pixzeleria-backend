@@ -10,38 +10,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/pizzas")
+@RequestMapping("/api/v1/pizzas")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class PizzaController {
 
     private final PizzaService pizzaService;
 
-    // Obtener todas las pipshas
     @GetMapping
     public ResponseEntity<List<Pizza>> getAllPizzas() {
         return ResponseEntity.ok(pizzaService.getAllPizzas());
     }
 
-    // Obtener pizza por id
-    @GetMapping("/{id}")
-    public ResponseEntity<Pizza> getPizzaById(@PathVariable Long id) {
-        return pizzaService.getPizzaById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // Guardar nueva pipsha
     @PostMapping
     public ResponseEntity<Pizza> createPizza(@RequestBody PizzaDTO pizza) {
         return ResponseEntity.ok(pizzaService.savePizza(pizza));
     }
 
-
-    
-    // Eliminar pizza
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePizza(@PathVariable Long id) {
         pizzaService.deletePizza(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pizza> updatePizza(@PathVariable Long id, @RequestBody PizzaDTO pizza) {
+        return ResponseEntity.ok(pizzaService.updatePizza(id, pizza));
     }
 }

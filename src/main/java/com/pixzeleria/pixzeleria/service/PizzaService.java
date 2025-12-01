@@ -29,11 +29,30 @@ public class PizzaService {
     public Pizza savePizza(PizzaDTO pizzaDTO) {
         Pizza pizza = new Pizza();
         pizza.setName(pizzaDTO.getName());
+        
+        pizza.setPrice(pizzaDTO.getPrice());
+        pizza.setStock(pizzaDTO.getStock());
+
         List<Ingredient> ingredients = ingredientRepository.findAllById(pizzaDTO.getIngredientIds());
         pizza.setIngredients(ingredients);
         return pizzaRepository.save(pizza);
     }
-    
+
+    public Pizza updatePizza(Long id, PizzaDTO pizzaDTO) {
+        return pizzaRepository.findById(id).map(pizza -> {
+            pizza.setName(pizzaDTO.getName());
+            
+            // Actualizamos precio y stock
+            pizza.setPrice(pizzaDTO.getPrice());
+            pizza.setStock(pizzaDTO.getStock());
+            
+            List<Ingredient> ingredients = ingredientRepository.findAllById(pizzaDTO.getIngredientIds());
+            pizza.setIngredients(ingredients);
+            
+            return pizzaRepository.save(pizza);
+        }).orElseThrow(() -> new RuntimeException("Pizza no encontrada"));
+    }
+
     public void deletePizza(Long id) {
         pizzaRepository.deleteById(id);
     }

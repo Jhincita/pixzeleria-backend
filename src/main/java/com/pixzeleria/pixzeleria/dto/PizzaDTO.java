@@ -8,6 +8,7 @@ import java.util.List;
 @Setter
 public class PizzaDTO {
     private String name;
+    private Integer stock;
+    private Double price;
     private List<Long> ingredientIds;
 }
-
