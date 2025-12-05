@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints - THESE MUST BE FIRST
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/clients/**").permitAll()
                         .requestMatchers("/api/pizzas/**").permitAll()
@@ -39,12 +39,12 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
 
                         // HTTP Method specific rules
-                        .requestMatchers(HttpMethod.GET, "/api/v1/orders").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/pizzas/**", "/api/v1/ingredients/**")
+                        .requestMatchers(HttpMethod.GET, "/api/orders").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/pizzas/**", "/api/ingredients/**")
                         .hasAnyAuthority("VENDEDOR", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/pizzas/**", "/api/v1/ingredients/**")
+                        .requestMatchers(HttpMethod.PUT, "/api/pizzas/**", "/api/ingredients/**")
                         .hasAnyAuthority("VENDEDOR", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/**")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**")
                         .hasAuthority("ADMIN")
 
                         // Everything else requires authentication
