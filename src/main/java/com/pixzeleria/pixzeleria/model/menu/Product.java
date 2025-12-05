@@ -19,4 +19,6 @@ public abstract class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    private String imageUrl;
 }

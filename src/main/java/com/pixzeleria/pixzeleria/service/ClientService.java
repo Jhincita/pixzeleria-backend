@@ -40,6 +40,11 @@ public class ClientService {
         return clientRepo.findAll();
     }
 
+    // find by role
+    public Optional<User>getByRole(String role) {
+        return userRepo.findByRole(Enum.valueOf(com.pixzeleria.pixzeleria.model.user.Role.class, role));
+    }
+
     // Delete profile
     public void delete(Long id) {
         clientRepo.deleteById(id);

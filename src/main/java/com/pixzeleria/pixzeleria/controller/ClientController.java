@@ -31,6 +31,11 @@ public class ClientController {
         return ResponseEntity.ok(clientService.getAll());
     }
 
+    @GetMapping("/role/{role}")
+    public ResponseEntity<?> getUserByRole(@PathVariable String role) {
+        return ResponseEntity.of(clientService.getByRole(role));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClientProfile(@PathVariable Long id) {
         clientService.delete(id);
