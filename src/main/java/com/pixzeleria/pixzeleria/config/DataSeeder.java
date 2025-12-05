@@ -42,8 +42,6 @@ public class DataSeeder implements CommandLineRunner {
         // DELETE IN ORDER: pizzas first, then ingredients
 
 
-
-        ingredientRepository.deleteAll();
         System.out.println("🗑️ Ingredientes eliminados");
         // Seed ingredients if empty
         if (ingredientRepository.count() == 0) {
