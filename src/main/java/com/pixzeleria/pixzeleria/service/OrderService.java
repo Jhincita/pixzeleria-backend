@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,33 +27,31 @@ public class OrderService {
     private final UserRepository userRepository;
 
     public Order createOrder(OrderRequest request) {
-        // 1. Obtener el usuario logueado
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        // 2. Crear la orden base
         Order order = new Order();
         order.setClient(user);
         order.setItems(new ArrayList<>());
 
-        // 3. Agregar pizzas del menú (si vienen en el pedido)
         if (request.getMenuPizzaIds() != null && !request.getMenuPizzaIds().isEmpty()) {
-            List<Pizza> pizzas = pizzaRepository.findAllById(request.getMenuPizzaIds());
 
-            // Aquí estaba el error probable: el bucle for
+            Map<Long, Long> quantities = request.getMenuPizzaIds().stream()
+                    .collect(Collectors.groupingBy(id -> id, Collectors.counting()));
+
+            List<Pizza> pizzas = pizzaRepository.findAllById(quantities.keySet());
+
             for (Pizza pizza : pizzas) {
                 OrderItem item = new OrderItem();
                 item.setOrder(order);
                 item.setProduct(pizza);
-                item.setQuantity(1);
-                item.setPrice(8000);
-                
+                item.setQuantity(quantities.get(pizza.getId()).intValue());
+                item.setPrice(pizza.getPrice());
                 order.getItems().add(item);
             }
         }
 
-        // 4. Guardar
         return orderRepository.save(order);
     }
 
