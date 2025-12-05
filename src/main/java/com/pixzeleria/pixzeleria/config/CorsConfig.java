@@ -14,8 +14,14 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175")
-                        .allowedMethods("*")
+                        .allowedOrigins(
+                                "http://localhost:5173",
+                                "http://localhost:5174",
+                                "http://localhost:5175",
+                                "https://pixzeleria-full-production.up.railway.app",  // Railway frontend
+                                "https://your-app.netlify.app"  // Netlify frontend (if using)
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
