@@ -25,29 +25,43 @@ public class OrderService {
     private final UserRepository userRepository;
 
     public Order createOrder(OrderRequest request) {
-        // 1. Obtener el usuario logueado
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        // 2. Crear la orden base
         Order order = new Order();
         order.setClient(user);
         order.setItems(new ArrayList<>());
 
-        // 3. Agregar pizzas del menú (si vienen en el pedido)
         if (request.getMenuPizzaIds() != null && !request.getMenuPizzaIds().isEmpty()) {
             List<Pizza> pizzas = pizzaRepository.findAllById(request.getMenuPizzaIds());
 
-            // Aquí estaba el error probable: el bucle for
-            for (Pizza pizza : pizzas) {
-                OrderItem item = new OrderItem();
-                item.setOrder(order);
-                item.setProduct(pizza);
-                item.setQuantity(1);
-                item.setPrice(pizza.getPrice());
-                
-                order.getItems().add(item);
+            if (request.getMenuPizzaIds() != null && !request.getMenuPizzaIds().isEmpty()) {
+            
+            List<Pizza> foundPizzas = pizzaRepository.findAllById(request.getMenuPizzaIds());
+
+            Map<Long, Pizza> pizzaMap = foundPizzas.stream()
+                    .collect(Collectors.toMap(Pizza::getId, p -> p));
+
+            for (Long pizzaId : request.getMenuPizzaIds()) {
+                Pizza pizza = pizzaMap.get(pizzaId);
+
+                if (pizza != null) {
+                    OrderItem item = new OrderItem();
+                    item.setOrder(order);
+                    item.setProduct(pizza);
+                    item.setQuantity(1);
+                    item.setPrice(pizza.getPrice());
+                    
+                    order.getItems().add(item);
+
+                    for (Ingredient ing : pizza.getIngredients()) {
+                        if (ing.getStock() > 0) {
+                            ing.setStock(ing.getStock() - 1);
+                            ingredientRepository.save(ing);
+                        }
+                    }
+                }
             }
         }
 
