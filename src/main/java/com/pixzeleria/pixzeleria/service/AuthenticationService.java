@@ -18,7 +18,7 @@ public class AuthenticationService {
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -27,8 +27,7 @@ public class AuthenticationService {
         user.setLastName(request.getLastName());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        // Si no se asigna rol, por defecto queda cliente
-        user.setRole(request.getRole() != null ? request.getRole() : Role.CLIENTE);
+        user.setRole(Role.CLIENTE);
 
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);

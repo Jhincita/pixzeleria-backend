@@ -45,7 +45,7 @@ public class OrderService {
                 item.setOrder(order);
                 item.setProduct(pizza);
                 item.setQuantity(1);
-                item.setPrice(8000);
+                item.setPrice(pizza.getPrice());
                 
                 order.getItems().add(item);
             }

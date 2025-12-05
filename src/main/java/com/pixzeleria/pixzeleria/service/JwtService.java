@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JWTService {
 
     // En la vida real, esto va en application.properties, pero para este trabajo lo dejamos aquí.
     // Esta es la llave secreta para firmar. Debe ser larga y segura U//w//U.

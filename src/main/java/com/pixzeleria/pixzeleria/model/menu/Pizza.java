@@ -20,4 +20,11 @@ public class Pizza extends Product {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private List<Ingredient> ingredients;
+<<<<<<< Updated upstream
+=======
+    private String size;
+    private int price;
+    private String imageUrl;
+    private String pixelImageUrl;
+>>>>>>> Stashed changes
 }
