@@ -40,8 +40,8 @@ public class DataSeeder implements CommandLineRunner {
             System.out.println("✅ Categorías cargadas");
         }
         // DELETE IN ORDER: pizzas first, then ingredients
-        pizzaRepository.deleteAll();
-        System.out.println("🗑️ Pizzas existentes eliminadas");
+
+
 
         ingredientRepository.deleteAll();
         System.out.println("🗑️ Ingredientes eliminados");
