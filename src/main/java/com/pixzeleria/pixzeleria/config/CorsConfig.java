@@ -18,8 +18,7 @@ public class CorsConfig {
                                 "http://localhost:5173",
                                 "http://localhost:5174",
                                 "http://localhost:5175",
-                                "https://pixzeleria-full-production.up.railway.app",  // Railway frontend
-                                "https://your-app.netlify.app"  // Netlify frontend (if using)
+                                "https://pixzeleria-full-production.up.railway.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
