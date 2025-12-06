@@ -37,6 +37,7 @@ public class AuthenticationService {
                 .build();
     }
 
+    //Esto debería funcaaaar
     public AuthenticationResponse register(RegisterRequest request) {
         var user = new User();
         user.setFirstName(request.getFirstName());
