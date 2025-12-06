@@ -27,27 +27,29 @@ public class AuthenticationService {
         user.setLastName(request.getLastName());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        // Si no se asigna rol, por defecto queda cliente
-        user.setRole(request.getRole() != null ? request.getRole() : Role.CLIENTE);
-
-        repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
-
-    //Esto debería funcaaaar
-    public AuthenticationResponse register(RegisterRequest request) {
-        var user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
         
         user.setRole(request.getRole() != null ? request.getRole() : Role.CLIENTE);
 
         repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .username(user.getUsername())
+                .role(user.getRole().name())
+                .firstName(user.getFirstName())
+                .build();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+        var user = repository.findByUsername(request.getUsername())
+                .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()
