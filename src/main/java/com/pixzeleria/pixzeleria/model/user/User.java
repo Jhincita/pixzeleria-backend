@@ -35,10 +35,12 @@ public class User implements UserDetails {
     // --- UserDetails contract ---
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == null) return List.of();
+        if (role == null) {
+            System.out.println("📢 CHIBI-DEBUG: ¡El campo 'role' es NULL para este usuario!");
+            return List.of();
+        }
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
     @Override
     public boolean isAccountNonExpired() { return true; }
 
