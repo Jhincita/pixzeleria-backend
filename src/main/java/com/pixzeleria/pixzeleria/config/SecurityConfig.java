@@ -30,9 +30,10 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints - THESE MUST BE FIRST
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                        
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/clients/**").permitAll()
                         .requestMatchers("/api/clients/**").permitAll()
                         .requestMatchers("/api/pizzas/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
