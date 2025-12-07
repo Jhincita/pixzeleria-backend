@@ -1,7 +1,9 @@
 package com.pixzeleria.pixzeleria.service;
 
 import com.pixzeleria.pixzeleria.dto.PizzaDTO;
+import com.pixzeleria.pixzeleria.model.menu.Ingredient;
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
+import com.pixzeleria.pixzeleria.repository.IngredientRepository;
 import com.pixzeleria.pixzeleria.repository.PizzaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class PizzaService {
 
     private final PizzaRepository pizzaRepository;
+    private final IngredientRepository ingredientRepository; 
 
     public Pizza createCustomPizza(PizzaDTO dto) {
         Pizza pizza = new Pizza();
@@ -22,6 +25,29 @@ public class PizzaService {
         pizza.setSize(dto.getSize() != null ? dto.getSize() : "Medium");
 
         return pizzaRepository.save(pizza);
+    }
+
+    public Pizza saveMenuPizza(PizzaDTO dto) {
+        Pizza pizza = new Pizza();
+
+        if (dto.getId() != null) {
+            pizza = pizzaRepository.findById(dto.getId()).orElse(new Pizza());
+        }
+
+        pizza.setName(dto.getName());
+        pizza.setPrice(dto.getPrice() != null ? dto.getPrice() : dto.getTotalPrice());
+        pizza.setSize("Medium");
+
+        if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
+            List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
+            pizza.setIngredients(ingredients);
+        }
+
+        return pizzaRepository.save(pizza);
+    }
+
+    public void deletePizza(Long id) {
+        pizzaRepository.deleteById(id);
     }
 
     public List<Pizza> getAllPizzas() {
