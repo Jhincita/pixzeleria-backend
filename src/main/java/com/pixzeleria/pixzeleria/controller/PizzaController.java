@@ -22,6 +22,25 @@ public class PizzaController {
         return ResponseEntity.ok(pizza);
     }
 
+    @PostMapping
+    public ResponseEntity<Pizza> createMenuPizza(@RequestBody PizzaDTO dto) {
+        // Si te sale error aquí en 'saveMenuPizza', es que te falta actualizar PizzaService también
+        return ResponseEntity.ok(pizzaService.saveMenuPizza(dto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pizza> updateMenuPizza(@PathVariable Long id, @RequestBody PizzaDTO dto) {
+        dto.setId(id);
+        return ResponseEntity.ok(pizzaService.saveMenuPizza(dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePizza(@PathVariable Long id) {
+        pizzaService.deletePizza(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Endpoint público (Ver menú)
     @GetMapping
     public ResponseEntity<List<Pizza>> getAllPizzas() {
         return ResponseEntity.ok(pizzaService.getAllPizzas());
