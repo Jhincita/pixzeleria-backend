@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,9 +35,8 @@ public class User implements UserDetails {
     // --- UserDetails contract ---
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(r -> new SimpleGrantedAuthority(r.name()))
-                .collect(Collectors.toSet());
+        if (role == null) return List.of();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
