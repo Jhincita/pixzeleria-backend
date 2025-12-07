@@ -42,7 +42,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                
                 if (jwtService.isTokenValid(jwt, userDetails)) {
+                    
+                    // 👇👇👇 AQUÍ ESTÁN LOS CHISMOSOS 👇👇👇
+                    System.out.println("📢 CHIBI-DEBUG: Usuario autenticado -> " + userDetails.getUsername());
+                    System.out.println("📢 CHIBI-DEBUG: Roles/Autoridades -> " + userDetails.getAuthorities());
+                    // 👆👆👆 FIN DE LOS CHISMOSOS 👆👆👆
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
@@ -53,8 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // Token is invalid/expired - continue without authentication
-            // Public endpoints will still work, protected ones will return 401
+            // Token is invalid/expired
+            System.out.println("📢 CHIBI-DEBUG: Error en token -> " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);
