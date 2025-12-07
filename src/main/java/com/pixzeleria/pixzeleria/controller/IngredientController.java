@@ -67,6 +67,7 @@ public class IngredientController {
     // Helpers
     private IngredientDTO entityToDTO(Ingredient entity) {
         IngredientDTO dto = new IngredientDTO();
+        dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setStock(entity.getStock());
         return dto;
