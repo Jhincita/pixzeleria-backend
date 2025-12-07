@@ -30,25 +30,30 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                        // 1. IMPORTANTE: Permitir el "saludo" inicial del navegador (OPTIONS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         
+                        // 2. Rutas Públicas
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/clients/**").permitAll()
-                        .requestMatchers("/api/clients/**").permitAll()
-                        .requestMatchers("/api/pizzas/**").permitAll()
+                        // Nota: Dejé GET pizzas público para que el menú se vea sin login
+                        .requestMatchers(HttpMethod.GET, "/api/pizzas/**").permitAll() 
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
 
-                        // HTTP Method specific rules
+                        // 3. Reglas Específicas
+                        // Permitir ver órdenes a todos (o cámbialo a authenticated() si prefieres)
                         .requestMatchers(HttpMethod.GET, "/api/orders").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/pizzas/**", "/api/ingredients/**")
-                        .hasAnyAuthority("VENDEDOR", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/pizzas/**", "/api/ingredients/**")
-                        .hasAnyAuthority("VENDEDOR", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/**")
-                        .hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users").permitAll() // Para tu tabla de usuarios
 
-                        // Everything else requires authentication
+                        // Rutas de Vendedor y Admin (Crear/Editar)
+                        .requestMatchers(HttpMethod.POST, "/api/pizzas/**", "/api/ingredients/**").hasAnyAuthority("VENDEDOR", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/pizzas/**", "/api/ingredients/**").hasAnyAuthority("VENDEDOR", "ADMIN")
+                        
+                        // Rutas solo Admin (Borrar)
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ADMIN")
+
+                        // Todo lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -60,21 +65,17 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // ✅ Use specific origins instead of "*" when using credentials
-        config.setAllowedOrigins(List.of(
-                "http://localhost:5173",
-                "http://localhost:5174",
-                "http://localhost:5175",
-                "https://pixzeleria-full-production.up.railway.app",
-                "https://pixzeleria-backend-production.up.railway.app"
-        ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        config.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+        // Usamos patrones (*) para que no te vuelva a molestar el CORS nunca más
+        config.setAllowedOriginPatterns(List.of("*")); 
+        
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
