@@ -33,19 +33,19 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 
                 // Públicos
-                .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/h2-console/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/ingredients", "/api/v1/pizzas").permitAll()
+                .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/h2-console/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/ingredients", "/api/pizzas").permitAll()
 
                 // ADMIN - Usuarios
-                .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/users/**").hasAuthority("ADMIN")
 
                 // ADMIN/VENDEDOR - Órdenes
-                .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasAnyAuthority("VENDEDOR", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/orders").hasAnyAuthority("VENDEDOR", "ADMIN")
                 
                 // ADMIN/VENDEDOR - Gestión Productos
-                .requestMatchers(HttpMethod.POST, "/api/v1/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
+                .requestMatchers(HttpMethod.PUT, "/api/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ADMIN")
 
                 .anyRequest().authenticated()
             )
