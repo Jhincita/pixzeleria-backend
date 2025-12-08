@@ -5,10 +5,7 @@ import com.pixzeleria.pixzeleria.model.menu.Ingredient;
 import com.pixzeleria.pixzeleria.model.user.Role;
 import com.pixzeleria.pixzeleria.model.user.User;
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
-import com.pixzeleria.pixzeleria.repository.CategoryRepository;
-import com.pixzeleria.pixzeleria.repository.IngredientRepository;
-import com.pixzeleria.pixzeleria.repository.PizzaRepository;
-import com.pixzeleria.pixzeleria.repository.UserRepository;
+import com.pixzeleria.pixzeleria.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +23,7 @@ public class DataSeeder implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OrderRepository orderRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -39,7 +37,10 @@ public class DataSeeder implements CommandLineRunner {
             categoryRepository.saveAll(Arrays.asList(pizzas, bebidas, ingredientes));
             System.out.println("✅ Categorías cargadas");
         }
-
+//
+//        orderRepository.deleteAll();
+//        pizzaRepository.deleteAll();
+//        ingredientRepository.deleteAll();
         // 2. Ingredientes
         if (ingredientRepository.count() == 0) {
             String baseUrl = "https://pub-3108682005f34a1e90099e4d00f82f95.r2.dev/buildyourpizza/";
