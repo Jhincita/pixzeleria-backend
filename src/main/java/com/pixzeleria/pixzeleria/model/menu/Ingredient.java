@@ -18,4 +18,6 @@ public class Ingredient {
 
     private String name;
     private int stock;
+
+    private String imageUrl;
 }
