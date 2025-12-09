@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "pizza")
 public class Pizza extends Product {
-
+    
     @ManyToMany
     @JoinTable(
             name = "pizza_ingredient",
@@ -19,6 +19,6 @@ public class Pizza extends Product {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private List<Ingredient> ingredients;
-    private String size; // Size in centimeters
-    private int price;
+    
+    private String size; 
 }
