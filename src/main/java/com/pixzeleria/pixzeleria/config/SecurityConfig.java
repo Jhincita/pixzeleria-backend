@@ -31,39 +31,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // 1. Permitir OPTIONS (preflight CORS)
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // 2. Rutas Públicas (Login, Registro)
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/clients/register").permitAll()
-                
-                // 3. Ver menú (público)
-                .requestMatchers(HttpMethod.GET, "/api/pizzas/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/ingredients/**").permitAll()
-                
-                // 4. Crear pedidos (público - cualquiera puede ordenar)
-                .requestMatchers(HttpMethod.POST, "/api/orders").permitAll()
-                
-                // 5. Ver/Gestionar pedidos (SOLO ADMIN)
-                .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/orders/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasAuthority("ADMIN")
-                
-                // 6. Gestión de usuarios (SOLO ADMIN)
-                .requestMatchers("/api/users/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/clients/**").hasAuthority("ADMIN")
-                
-                // 7. Gestión de empleados (SOLO ADMIN)
-                .requestMatchers("/api/employees/**").hasAuthority("ADMIN")
-
-                // 8. Gestión de pizzas (ADMIN y VENDEDOR)
-                .requestMatchers(HttpMethod.POST, "/api/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
-                .requestMatchers(HttpMethod.PUT, "/api/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/pizzas/**").hasAuthority("ADMIN")
-
-                // 9. Todo lo demás requiere autenticación
-                .anyRequest().authenticated()
+                // 🔥 TEMPORAL: PERMITIR TODO PARA DEBUGGING
+                .anyRequest().permitAll()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)
@@ -76,17 +45,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         
-        config.setAllowedOriginPatterns(Arrays.asList(
-            "https://pixzeleria-full-production.up.railway.app",
-            "http://localhost:*",
-            "http://127.0.0.1:*"
-        ));
-        
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Arrays.asList("Authorization"));
         config.setAllowCredentials(true);
-        config.setMaxAge(3600L); // Cache preflight por 1 hora
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
