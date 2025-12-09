@@ -11,7 +11,9 @@ import java.util.List;
 @Entity
 @Table(name = "pizza")
 public class Pizza extends Product {
-    
+    private String name;
+    private Integer price;
+    private Integer stock;
     @ManyToMany
     @JoinTable(
             name = "pizza_ingredient",

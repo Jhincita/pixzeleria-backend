@@ -20,6 +20,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final ClientService clientService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = new User();
@@ -30,7 +31,13 @@ public class AuthenticationService {
         
         user.setRole(request.getRole() != null ? request.getRole() : Role.CLIENTE);
 
-        repository.save(user);
+        user = repository.save(user);
+        
+        // 👇 AGREGAR ESTO:  Si es cliente, crear su perfil
+        if (user.getRole() == Role.CLIENTE) {
+            clientService.create(user.getId(), 0);
+        }
+        
         var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()

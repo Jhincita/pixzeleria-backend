@@ -28,23 +28,31 @@ public class PizzaService {
     }
 
     public Pizza saveMenuPizza(PizzaDTO dto) {
-        Pizza pizza = new Pizza();
+    Pizza pizza = new Pizza();
 
-        if (dto.getId() != null) {
-            pizza = pizzaRepository.findById(dto.getId()).orElse(new Pizza());
-        }
-
-        pizza.setName(dto.getName());
-        pizza.setPrice(dto.getPrice() != null ? dto.getPrice() : dto.getTotalPrice());
-        pizza.setSize("Medium");
-
-        if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
-            List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
-            pizza.setIngredients(ingredients);
-        }
-
-        return pizzaRepository.save(pizza);
+    if (dto.getId() != null) {
+        pizza = pizzaRepository. findById(dto.getId()).orElse(new Pizza());
     }
+
+    pizza.setName(dto.getName());
+    
+    Integer finalPrice = dto.getPrice() != null ? dto.getPrice() : 
+                        (dto.getTotalPrice() != 0 ? dto.getTotalPrice() : 0);
+    
+    if (finalPrice == null || finalPrice == 0) {
+        throw new RuntimeException("El precio de la pizza no puede ser null o 0");
+    }
+    
+    pizza.setPrice(finalPrice);
+    pizza.setSize("Medium");
+
+    if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
+        List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
+        pizza.setIngredients(ingredients);
+    }
+
+    return pizzaRepository.save(pizza);
+}
 
     public void deletePizza(Long id) {
         pizzaRepository.deleteById(id);

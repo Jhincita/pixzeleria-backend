@@ -1,15 +1,15 @@
-package com.pixzeleria.pixzeleria.model.menu;
+package com.pixzeleria.pixzeleria.model. menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.pixzeleria.pixzeleria.model.Category;
+import com.pixzeleria.pixzeleria.model. Category;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok. Getter;
+import lombok. Setter;
 
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType. JOINED)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class Product {
     @Id
@@ -21,7 +21,8 @@ public abstract class Product {
     private Category category;
 
     private String imageUrl;
-
     private String name;
-    private Integer price;
+    
+    @Column(nullable = false)
+    private Integer price = 0;  
 }
