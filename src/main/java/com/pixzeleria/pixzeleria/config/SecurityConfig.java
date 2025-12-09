@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -30,24 +31,38 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // 1. Permitir saludos del navegador (OPTIONS)
+                // 1. Permitir OPTIONS (preflight CORS)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // 2. Rutas Públicas (Login, Registro, Ver Menú)
+                // 2. Rutas Públicas (Login, Registro)
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/clients/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/pizzas/**").permitAll()
+                .requestMatchers("/api/clients/register").permitAll()
                 
-                // 3. Rutas Abiertas (Para que no te falle el Dashboard/Pedidos por ahora)
-                .requestMatchers("/api/orders/**").permitAll() 
-                .requestMatchers("/api/users/**").permitAll()
-                .requestMatchers("/api/employees/**").permitAll() // Agregué employees por si acaso
+                // 3. Ver menú (público)
+                .requestMatchers(HttpMethod.GET, "/api/pizzas/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/ingredients/**").permitAll()
+                
+                // 4. Crear pedidos (público - cualquiera puede ordenar)
+                .requestMatchers(HttpMethod.POST, "/api/orders").permitAll()
+                
+                // 5. Ver/Gestionar pedidos (SOLO ADMIN)
+                .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/orders/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasAuthority("ADMIN")
+                
+                // 6. Gestión de usuarios (SOLO ADMIN)
+                .requestMatchers("/api/users/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/clients/**").hasAuthority("ADMIN")
+                
+                // 7. Gestión de empleados (SOLO ADMIN)
+                .requestMatchers("/api/employees/**").hasAuthority("ADMIN")
 
-                // 4. Admin y Vendedor
+                // 8. Gestión de pizzas (ADMIN y VENDEDOR)
                 .requestMatchers(HttpMethod.POST, "/api/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
                 .requestMatchers(HttpMethod.PUT, "/api/pizzas/**").hasAnyAuthority("ADMIN", "VENDEDOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/pizzas/**").hasAuthority("ADMIN")
 
+                // 9. Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -61,12 +76,17 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         
-        // 🔥 CORS PERMISIVO: Aceptamos a todos para evitar problemas en el deploy
-        config.setAllowedOriginPatterns(List.of("*")); 
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowedOriginPatterns(Arrays.asList(
+            "https://pixzeleria-full-production.up.railway.app",
+            "http://localhost:*",
+            "http://127.0.0.1:*"
+        ));
+        
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setExposedHeaders(Arrays.asList("Authorization"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L); // Cache preflight por 1 hora
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
