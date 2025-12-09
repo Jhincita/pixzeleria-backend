@@ -1,5 +1,6 @@
 package com.pixzeleria.pixzeleria.service;
 
+import com.pixzeleria.pixzeleria.dto.OrderDTO;
 import com.pixzeleria.pixzeleria.dto.OrderRequest;
 import com.pixzeleria.pixzeleria.model.user.User;
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,17 +37,16 @@ public class OrderService {
         order.setClient(user);
         order.setItems(new ArrayList<>());
 
-        // 3. Agregar pizzas del menú (si vienen en el pedido)
+        // 3. Agregar pizzas del menú
         if (request.getMenuPizzaIds() != null && !request.getMenuPizzaIds().isEmpty()) {
             List<Pizza> pizzas = pizzaRepository.findAllById(request.getMenuPizzaIds());
-
-            // Aquí estaba el error probable: el bucle for
+            
             for (Pizza pizza : pizzas) {
                 OrderItem item = new OrderItem();
                 item.setOrder(order);
                 item.setProduct(pizza);
                 item.setQuantity(1);
-                item.setPrice(8000);
+                item.setPrice(8000.0);
                 
                 order.getItems().add(item);
             }
@@ -55,7 +56,53 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public List<OrderDTO> getAllOrdersDTO() {
+        List<Order> orders = orderRepository.findAll();
+        
+        return orders.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+    }
+
+    // Mantener el método original por compatibilidad
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
+
+    private OrderDTO convertToDTO(Order order) {
+    // Calcular items
+    List<OrderDTO.OrderItemDTO> itemDTOs = order.getItems().stream()
+        .map(item -> {
+            String productName = "Producto desconocido";
+            
+            if (item.getProduct() instanceof Pizza) {
+                Pizza pizza = (Pizza) item.getProduct();
+                productName = pizza.getName();
+            }
+            
+            return OrderDTO.OrderItemDTO.builder()
+                .id(item.getId())
+                .productName(productName)
+                .quantity(item.getQuantity())
+                .price(item.getPrice())
+                .subtotal(item.getPrice() * item.getQuantity())
+                .build();
+        })
+        .collect(Collectors.toList());
+
+    // Calcular total
+    double total = itemDTOs.stream()
+        .mapToDouble(OrderDTO.OrderItemDTO::getSubtotal)
+        .sum();
+
+    // Construir DTO
+    return OrderDTO.builder()
+        .id(order.getId())
+        .clientName(order.getClient() != null ? 
+            order.getClient().getFirstName() + " " + order.getClient().getLastName() : 
+            "Cliente desconocido")
+        .items(itemDTOs)
+        .total(total)
+        .build();
+}
 }

@@ -1,5 +1,6 @@
 package com.pixzeleria.pixzeleria.controller;
 
+import com.pixzeleria.pixzeleria.dto.OrderDTO;
 import com.pixzeleria.pixzeleria.dto.OrderRequest;
 import com.pixzeleria.pixzeleria.model.order.Order;
 import com.pixzeleria.pixzeleria.service.OrderService;
@@ -24,9 +25,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(request));
     }
 
+    // 🔥 CAMBIO: Ahora devuelve DTOs en vez de entidades directas
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrdersDTO());
     }
 
     @DeleteMapping("/{id}")
