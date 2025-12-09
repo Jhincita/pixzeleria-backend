@@ -29,9 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        
+        final String requestPath = request.getRequestURI();
         final String authHeader = request.getHeader("Authorization");
 
+        System.out.println("🔍 Petición a: " + requestPath);
+        System.out.println("🔍 Header Authorization: " + (authHeader != null ? "Presente" : "Ausente"));
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("⚠️ No hay token JWT en la petición");
             filterChain.doFilter(request, response);
             return;
         }
@@ -40,15 +46,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
 
+            System.out.println("🔐 Token extraído, usuario: " + userEmail);
+
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     
-                    // 👇👇👇 AQUÍ ESTÁN LOS CHISMOSOS 👇👇👇
-                    System.out.println("📢 CHIBI-DEBUG: Usuario autenticado -> " + userDetails.getUsername());
-                    System.out.println("📢 CHIBI-DEBUG: Roles/Autoridades -> " + userDetails.getAuthorities());
-                    // 👆👆👆 FIN DE LOS CHISMOSOS 👆👆👆
+                    System.out.println("✅ Token válido para: " + userDetails.getUsername());
+                    System.out.println("✅ Roles: " + userDetails.getAuthorities());
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
@@ -57,11 +63,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    
+                    System.out.println("✅ Usuario autenticado correctamente");
+                } else {
+                    System.out.println("❌ Token inválido o expirado");
                 }
             }
         } catch (Exception e) {
-            // Token is invalid/expired
-            System.out.println("📢 CHIBI-DEBUG: Error en token -> " + e.getMessage());
+            System.out.println("❌ Error procesando token: " + e.getMessage());
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);
