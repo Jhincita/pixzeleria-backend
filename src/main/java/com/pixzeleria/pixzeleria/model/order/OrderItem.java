@@ -7,10 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter@Entity
+@Setter
+@Entity
 public class OrderItem {
 
-   @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -19,7 +20,7 @@ public class OrderItem {
     @JsonIgnore
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
     private int quantity;
