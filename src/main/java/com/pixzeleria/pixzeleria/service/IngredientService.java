@@ -24,6 +24,7 @@ public class IngredientService {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(dto.getName());
         ingredient.setStock(dto.getStock());
+        ingredient.setImageUrl(dto.getImageUrl());
         return repository.save(ingredient);
     }
     // read

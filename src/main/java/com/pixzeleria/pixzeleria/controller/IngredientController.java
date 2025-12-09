@@ -70,6 +70,7 @@ public class IngredientController {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setStock(entity.getStock());
+        dto.setImageUrl(entity.getImageUrl());  // ADD THIS
         return dto;
     }
 
