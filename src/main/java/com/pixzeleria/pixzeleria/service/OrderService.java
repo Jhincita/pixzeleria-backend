@@ -2,20 +2,22 @@ package com.pixzeleria.pixzeleria.service;
 
 import com.pixzeleria.pixzeleria.dto.OrderDTO;
 import com.pixzeleria.pixzeleria.dto.OrderRequest;
-import com.pixzeleria.pixzeleria.model.user.User;
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
 import com.pixzeleria.pixzeleria.model.order.Order;
 import com.pixzeleria.pixzeleria.model.order.OrderItem;
+import com.pixzeleria.pixzeleria.model.user.User;
 import com.pixzeleria.pixzeleria.repository.OrderRepository;
 import com.pixzeleria.pixzeleria.repository.PizzaRepository;
 import com.pixzeleria.pixzeleria.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,83 +28,72 @@ public class OrderService {
     private final PizzaRepository pizzaRepository;
     private final UserRepository userRepository;
 
-    public Order createOrder(OrderRequest request) {
-        // 1. Obtener el usuario logueado
+    @Transactional // Importante para que guarde todo junto
+    public OrderDTO createOrder(OrderRequest request) {
+        // 1. OBTENER AL CLIENTE REAL (Adiós "Desconocido")
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
 
-        // 2. Crear la orden base
+        // 2. CREAR LA ORDEN VACÍA
         Order order = new Order();
         order.setClient(user);
         order.setItems(new ArrayList<>());
 
-        // 3. Agregar pizzas del menú
-        if (request.getMenuPizzaIds() != null && !request.getMenuPizzaIds().isEmpty()) {
-            List<Pizza> pizzas = pizzaRepository.findAllById(request.getMenuPizzaIds());
+        // 3. CALCULAR CANTIDADES (Aquí arreglamos lo de "siempre es 1")
+        // Si el frontend manda [1, 1, 1, 2], esto crea un mapa: {1=3, 2=1}
+        Map<Long, Long> quantityMap = request.getMenuPizzaIds().stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // 4. LLENAR LOS ÍTEMS CON DATOS REALES
+        for (Map.Entry<Long, Long> entry : quantityMap.entrySet()) {
+            Long pizzaId = entry.getKey();
+            int quantity = entry.getValue().intValue();
+
+            Pizza pizza = pizzaRepository.findById(pizzaId)
+                    .orElseThrow(() -> new RuntimeException("Pizza no encontrada ID: " + pizzaId));
+
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProduct(pizza);
+            item.setQuantity(quantity); // ¡Cantidad real!
+            item.setPrice(pizza.getPrice()); // ¡Precio real de la base de datos!
             
-            for (Pizza pizza : pizzas) {
-                OrderItem item = new OrderItem();
-                item.setOrder(order);
-                item.setProduct(pizza);
-                item.setQuantity(1);
-                item.setPrice(8000.0);
-                
-                order.getItems().add(item);
-            }
+            order.getItems().add(item);
         }
 
-        // 4. Guardar
-        return orderRepository.save(order);
+        // 5. GUARDAR Y RETORNAR DTO
+        Order savedOrder = orderRepository.save(order);
+        return mapToDTO(savedOrder);
     }
 
-    public List<OrderDTO> getAllOrdersDTO() {
-        List<Order> orders = orderRepository.findAll();
-        
-        return orders.stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
+    public List<OrderDTO> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::mapToDTO) // Convertimos cada orden a tu DTO bonito
+                .collect(Collectors.toList());
     }
 
-    // Mantener el método original por compatibilidad
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
-    }
+    // --- MAPPER: Convierte la Entidad fea a tu OrderDTO bonito ---
+    private OrderDTO mapToDTO(Order order) {
+        double total = order.getItems().stream()
+                .mapToDouble(i -> i.getPrice() * i.getQuantity())
+                .sum();
 
-    private OrderDTO convertToDTO(Order order) {
-    // Calcular items
-    List<OrderDTO.OrderItemDTO> itemDTOs = order.getItems().stream()
-        .map(item -> {
-            String productName = "Producto desconocido";
-            
-            if (item.getProduct() instanceof Pizza) {
-                Pizza pizza = (Pizza) item.getProduct();
-                productName = pizza.getName();
-            }
-            
-            return OrderDTO.OrderItemDTO.builder()
-                .id(item.getId())
-                .productName(productName)
-                .quantity(item.getQuantity())
-                .price(item.getPrice())
-                .subtotal(item.getPrice() * item.getQuantity())
+        List<OrderDTO.OrderItemDTO> itemDTOs = order.getItems().stream()
+                .map(item -> OrderDTO.OrderItemDTO.builder()
+                        .id(item.getId())
+                        .productName(item.getProduct().getName())
+                        .quantity(item.getQuantity())
+                        .price(item.getPrice())
+                        .subtotal(item.getPrice() * item.getQuantity())
+                        .build())
+                .collect(Collectors.toList());
+
+        return OrderDTO.builder()
+                .id(order.getId())
+                .clientName(order.getClient() != null ? order.getClient().getUsername() : "Anonimo")
+                .items(itemDTOs)
+                .total(total)
                 .build();
-        })
-        .collect(Collectors.toList());
-
-    // Calcular total
-    double total = itemDTOs.stream()
-        .mapToDouble(OrderDTO.OrderItemDTO::getSubtotal)
-        .sum();
-
-    // Construir DTO
-    return OrderDTO.builder()
-        .id(order.getId())
-        .clientName(order.getClient() != null ? 
-            order.getClient().getFirstName() + " " + order.getClient().getLastName() : 
-            "Cliente desconocido")
-        .items(itemDTOs)
-        .total(total)
-        .build();
-}
+    }
 }

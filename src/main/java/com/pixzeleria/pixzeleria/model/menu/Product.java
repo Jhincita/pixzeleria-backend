@@ -21,4 +21,6 @@ public abstract class Product {
     private Category category;
 
     private String imageUrl;
+    private String name;
+    private Integer price;
 }
