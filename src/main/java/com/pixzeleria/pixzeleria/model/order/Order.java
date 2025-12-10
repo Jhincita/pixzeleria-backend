@@ -1,5 +1,6 @@
 package com.pixzeleria.pixzeleria.model.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pixzeleria.pixzeleria.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,8 +18,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User client;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
