@@ -19,9 +19,14 @@ public class PizzaService {
     private final IngredientRepository ingredientRepository; 
 
     public Pizza createCustomPizza(PizzaDTO dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
+        
         if (dto.getTotalPrice() <= 0) {
             throw new IllegalArgumentException("El precio no puede ser menor o igual a cero");
         }
+        
         Pizza pizza = new Pizza();
         pizza.setName(dto.getName());
         pizza.setPrice(dto.getTotalPrice());
@@ -31,22 +36,26 @@ public class PizzaService {
     }
 
     public Pizza saveMenuPizza(PizzaDTO dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
+        
         Pizza pizza = new Pizza();
 
         if (dto.getId() != null) {
-            pizza = pizzaRepository.findById(dto.getId()).orElse(new Pizza());
+            pizza = pizzaRepository.findById(dto. getId()).orElse(new Pizza());
         }
 
-        pizza.setName(dto.getName());
+        pizza. setName(dto.getName());
         
         Integer finalPrice = dto.getPrice() != null ? dto.getPrice() : 
                             (dto.getTotalPrice() != 0 ? dto.getTotalPrice() : 0);
         
         if (finalPrice == null || finalPrice <= 0) {
             throw new IllegalArgumentException("El precio no puede ser nulo o menor o igual a cero");
-        } // ✅ AGREGADA LA LLAVE FALTANTE
+        }
         
-        pizza. setPrice(finalPrice);
+        pizza.setPrice(finalPrice);
         pizza.setSize("Medium");
 
         if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
@@ -54,11 +63,11 @@ public class PizzaService {
             pizza.setIngredients(ingredients);
         }
 
-        return pizzaRepository. save(pizza);
+        return pizzaRepository.save(pizza);
     }
 
     public void deletePizza(Long id) {
-        pizzaRepository.deleteById(id);
+        pizzaRepository. deleteById(id);
     }
 
     public List<Pizza> getAllPizzas() {

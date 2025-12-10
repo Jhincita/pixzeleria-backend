@@ -16,7 +16,7 @@ public class PizzaDTO {
     // --- Campos antiguos (se mantienen para el "Arma tu Pizza" o respuestas) ---
     private Double basePrice;
     private List<IngredientDTO> ingredients;
-    private int totalPrice;
+    private Integer totalPrice;
     
     // Opcional: Stock (aunque las pizzas no suelen tener stock directo, el form lo envía)
     private Integer stock; 
