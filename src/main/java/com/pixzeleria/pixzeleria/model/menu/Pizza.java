@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue("PIZZA") 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pizza extends Product {
 
