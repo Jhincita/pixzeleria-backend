@@ -1,10 +1,10 @@
 package com.pixzeleria.pixzeleria.service;
 
-import com.pixzeleria.pixzeleria.dto.PizzaDTO;
-import com.pixzeleria.pixzeleria.model.menu.Ingredient;
-import com.pixzeleria.pixzeleria.model.menu.Pizza;
-import com.pixzeleria.pixzeleria.repository.IngredientRepository;
-import com.pixzeleria.pixzeleria.repository.PizzaRepository;
+import com. pixzeleria.pixzeleria. dto.PizzaDTO;
+import com.pixzeleria.pixzeleria.model.menu. Ingredient;
+import com.pixzeleria.pixzeleria.model. menu.Pizza;
+import com. pixzeleria.pixzeleria. repository.IngredientRepository;
+import com.pixzeleria. pixzeleria.repository.PizzaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,30 +31,31 @@ public class PizzaService {
     }
 
     public Pizza saveMenuPizza(PizzaDTO dto) {
-    Pizza pizza = new Pizza();
+        Pizza pizza = new Pizza();
 
-    if (dto.getId() != null) {
-        pizza = pizzaRepository.findById(dto.getId()).orElse(new Pizza());
+        if (dto.getId() != null) {
+            pizza = pizzaRepository.findById(dto.getId()).orElse(new Pizza());
+        }
+
+        pizza.setName(dto.getName());
+        
+        Integer finalPrice = dto.getPrice() != null ? dto.getPrice() : 
+                            (dto.getTotalPrice() != 0 ? dto.getTotalPrice() : 0);
+        
+        if (finalPrice == null || finalPrice <= 0) {
+            throw new IllegalArgumentException("El precio no puede ser nulo o menor o igual a cero");
+        } // ✅ AGREGADA LA LLAVE FALTANTE
+        
+        pizza. setPrice(finalPrice);
+        pizza.setSize("Medium");
+
+        if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
+            List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
+            pizza.setIngredients(ingredients);
+        }
+
+        return pizzaRepository. save(pizza);
     }
-
-    pizza.setName(dto.getName());
-    
-    Integer finalPrice = dto.getPrice() != null ? dto.getPrice() : 
-                        (dto.getTotalPrice() != 0 ? dto.getTotalPrice() : 0);
-    
-    if (finalPrice == null || finalPrice <= 0) {
-        throw new IllegalArgumentException("El precio no puede ser nulo o menor o igual a cero");
-    
-    pizza.setPrice(finalPrice);
-    pizza.setSize("Medium");
-
-    if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
-        List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
-        pizza.setIngredients(ingredients);
-    }
-
-    return pizzaRepository.save(pizza);
-}
 
     public void deletePizza(Long id) {
         pizzaRepository.deleteById(id);
