@@ -1,9 +1,10 @@
 package com.pixzeleria.pixzeleria.model.order;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson. annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pixzeleria.pixzeleria.model.user.User;
 import jakarta.persistence.*;
-import lombok. Getter;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -20,9 +21,10 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "orders"})
     private User client;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<OrderItem> items = new ArrayList<>();
 }
