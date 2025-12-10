@@ -1,15 +1,15 @@
-package com.pixzeleria. pixzeleria.config;
+package com.pixzeleria.pixzeleria.config;
 
 import com.pixzeleria.pixzeleria.model.Category;
 import com.pixzeleria.pixzeleria.model.menu. Ingredient;
-import com.pixzeleria.pixzeleria.model.user.Role;
+import com.pixzeleria.pixzeleria.model. user.Role;
 import com.pixzeleria.pixzeleria.model.user.User;
 import com.pixzeleria.pixzeleria.model.menu.Pizza;
 import com.pixzeleria.pixzeleria.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework. boot.CommandLineRunner;
-import org.springframework.security.crypto. password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework. security.crypto.password.PasswordEncoder;
+import org.springframework. stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class DataSeeder implements CommandLineRunner {
                 Category pizzas = new Category(); 
                 pizzas.setName("Pizzas");
                 Category bebidas = new Category(); 
-                bebidas. setName("Bebidas");
+                bebidas.setName("Bebidas");
                 Category ingredientes = new Category(); 
                 ingredientes.setName("Ingredientes");
 
@@ -106,7 +106,7 @@ public class DataSeeder implements CommandLineRunner {
                 Ingredient i12 = new Ingredient(); 
                 i12.setName("Cebolla"); 
                 i12.setStock(250); 
-                i12.setImageUrl(baseUrl + "onion. svg");
+                i12.setImageUrl(baseUrl + "onion.svg");
                 
                 Ingredient i13 = new Ingredient(); 
                 i13.setName("Salsa BBQ"); 
@@ -118,7 +118,7 @@ public class DataSeeder implements CommandLineRunner {
                 ));
                 System. out.println("✅ Ingredientes cargados:  13 ingredientes");
             } else {
-                System.out. println("ℹ️ Ingredientes ya existen, saltando...");
+                System.out.println("ℹ️ Ingredientes ya existen, saltando.. .");
             }
 
             // 3. ADMIN
@@ -127,18 +127,18 @@ public class DataSeeder implements CommandLineRunner {
             if (admin == null) {
                 admin = new User();
                 admin.setUsername("admin");
-                admin.setPassword(passwordEncoder. encode("jojo123"));
-                admin.setRole(Role. ADMIN); 
+                admin.setPassword(passwordEncoder.encode("jojo123"));
+                admin.setRole(Role.ADMIN); 
                 admin.setFirstName("Super");
                 admin.setLastName("Admin");
-                admin.setRoles(Set.of(Role.ADMIN)); 
+                admin. setRoles(Set.of(Role.ADMIN)); 
                 userRepository.save(admin);
                 System.out.println("✅ Usuario Admin creado");
             } else {
-                System.out. println("ℹ️ Usuario Admin ya existe");
+                System. out.println("ℹ️ Usuario Admin ya existe");
             }
 
-            // 4. Pizzas del Menú (solo si no existen)
+            // Pizzas del Menú (solo si no existen)
             if (pizzaRepository.count() == 0) {
                 System.out.println("📦 Cargando pizzas del menú...");
                 
@@ -216,24 +216,25 @@ public class DataSeeder implements CommandLineRunner {
                 }
 
                 pizzaRepository. saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));
-                System.out. println("✅ Pizzas cargadas:  6 pizzas con nombre y precio");
+                System.out. println("✅ Pizzas cargadas: 6 pizzas con nombre y precio");
             } else {
-                System.out.println("ℹ️ Pizzas ya existen en la BD:  " + pizzaRepository.count() + " pizzas");
-                System.out.println("⚠️ Si las pizzas tienen datos incorrectos, bórralas manualmente desde Railway");
+                System.out.println("ℹ️ Pizzas ya existen en la BD: " + pizzaRepository.count() + " pizzas");
+                System.out.println("⚠️  SOLUCIÓN: Ejecuta este SQL en Railway para limpiar datos corruptos:");
+                System.out.println("   DELETE FROM pizza_ingredient; DELETE FROM pizza; DELETE FROM product;");
             }
 
-            // 5. Clientes de prueba
-            if (userRepository.findByUsername("cliente1").isEmpty()) {
+            // Clientes de prueba
+            if (userRepository. findByUsername("cliente1").isEmpty()) {
                 User client1 = new User();
                 client1.setUsername("cliente1");
                 client1.setPassword(passwordEncoder.encode("cliente123"));
                 client1.setFirstName("Juan");
                 client1.setLastName("Pérez");
-                client1.setRole(Role. CLIENTE);
-                userRepository. save(client1);
+                client1.setRole(Role.CLIENTE);
+                userRepository.save(client1);
                 System.out.println("✅ Cliente1 creado");
             } else {
-                System.out. println("ℹ️ Cliente1 ya existe");
+                System. out.println("ℹ️ Cliente1 ya existe");
             }
             
             System.out.println("\n🎉 ¡DataSeeder completado sin errores!");
