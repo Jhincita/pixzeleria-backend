@@ -1,9 +1,8 @@
 package com.pixzeleria.pixzeleria.controller;
 
-import com.pixzeleria.pixzeleria.dto.OrderDTO; // 👈 Usamos tu nuevo DTO
+import com.pixzeleria. pixzeleria.dto.OrderDTO;
 import com.pixzeleria.pixzeleria.dto.OrderRequest;
-import com.pixzeleria.pixzeleria.service.OrderService;
-import com.pixzeleria.pixzeleria.repository.OrderRepository;
+import com.pixzeleria.pixzeleria.service. OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders") // Sin v1, como acordamos
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
 
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequest request) {
@@ -31,7 +29,7 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        orderRepository.deleteById(id);
+        orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
 }

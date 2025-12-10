@@ -8,6 +8,7 @@ import com.pixzeleria. pixzeleria.repository.PizzaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,17 +37,39 @@ public class PizzaService {
     }
 
     public Pizza saveMenuPizza(PizzaDTO dto) {
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
+    if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+        throw new IllegalArgumentException("El nombre no puede estar vacío");
+    }
+    
+    Pizza pizza;
+
+    if (dto.getId() != null) {
+        pizza = pizzaRepository.findById(dto. getId())
+            .orElseThrow(() -> new RuntimeException("Pizza no encontrada"));
+        
+        pizza. setName(dto.getName());
+        
+        Integer finalPrice = dto.getPrice() != null ? dto.getPrice() : 
+                            (dto. getTotalPrice() != 0 ? dto.getTotalPrice() : 0);
+        
+        if (finalPrice == null || finalPrice <= 0) {
+            throw new IllegalArgumentException("El precio no puede ser nulo o menor o igual a cero");
         }
         
-        Pizza pizza = new Pizza();
-
-        if (dto.getId() != null) {
-            pizza = pizzaRepository.findById(dto. getId()).orElse(new Pizza());
+        pizza.setPrice(finalPrice);
+        
+        if (dto.getIngredientIds() != null) {
+            if (dto.getIngredientIds().isEmpty()) {
+                pizza.setIngredients(new ArrayList<>());  // Vaciar explícitamente
+            } else {
+                List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
+                pizza.setIngredients(ingredients);
+            }
         }
-
-        pizza. setName(dto.getName());
+        
+    } else {
+        pizza = new Pizza();
+        pizza.setName(dto.getName());
         
         Integer finalPrice = dto.getPrice() != null ? dto.getPrice() : 
                             (dto.getTotalPrice() != 0 ? dto.getTotalPrice() : 0);
@@ -62,9 +85,10 @@ public class PizzaService {
             List<Ingredient> ingredients = ingredientRepository.findAllById(dto.getIngredientIds());
             pizza.setIngredients(ingredients);
         }
-
-        return pizzaRepository.save(pizza);
     }
+
+    return pizzaRepository.save(pizza);
+}
 
     public void deletePizza(Long id) {
         pizzaRepository. deleteById(id);
