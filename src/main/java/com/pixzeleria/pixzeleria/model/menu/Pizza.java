@@ -1,24 +1,35 @@
-package com.pixzeleria.pixzeleria.model.menu;
+package com.pixzeleria.pixzeleria.model. menu;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
-@Table(name = "pizza")
 public class Pizza extends Product {
-    private Integer stock;
-    @ManyToMany
+
+    private String size;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "pizza_ingredient",
-            joinColumns = @JoinColumn(name = "pizza_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+        name = "pizza_ingredients",
+        joinColumns = @JoinColumn(name = "pizza_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<>();
+
+    public String getSize() { 
+        return size; 
+    }
     
-    private String size; 
+    public void setSize(String size) { 
+        this.size = size; 
+    }
+    
+    public List<Ingredient> getIngredients() { 
+        return ingredients; 
+    }
+    
+    public void setIngredients(List<Ingredient> ingredients) { 
+        this.ingredients = ingredients; 
+    }
 }
