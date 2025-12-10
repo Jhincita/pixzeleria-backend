@@ -6,19 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("PIZZA") 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pizza extends Product {
 
     private String size;
 
-    @ManyToMany(cascade = {CascadeType. PERSIST, CascadeType. MERGE}, fetch = FetchType.LAZY) 
+    @ManyToMany(cascade = {CascadeType. PERSIST, CascadeType. MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
         name = "pizza_ingredients",
         joinColumns = @JoinColumn(name = "pizza_id"),
         inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
-    @JsonIgnoreProperties("pizzas")
+    @JsonIgnoreProperties("pizzas") 
     private List<Ingredient> ingredients = new ArrayList<>();
 
     public String getSize() { 

@@ -9,8 +9,7 @@ import lombok. Setter;
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType. STRING)
+@Inheritance(strategy = InheritanceType. JOINED)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class Product {
     @Id
