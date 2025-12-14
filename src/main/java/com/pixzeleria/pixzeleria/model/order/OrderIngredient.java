@@ -2,7 +2,9 @@ package com.pixzeleria.pixzeleria.model.order;
 
 import com.pixzeleria.pixzeleria.model.menu.Ingredient;
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "order_ingredient")
 public class OrderIngredient {

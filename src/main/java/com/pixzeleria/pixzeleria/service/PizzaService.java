@@ -18,16 +18,17 @@ public class PizzaService {
 
     private final PizzaRepository pizzaRepository;
     private final IngredientRepository ingredientRepository; 
+/* ESTO HAY QUE MOVERLO A ORDERSERVICE
 
     public Pizza createCustomPizza(PizzaDTO dto) {
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío");
         }
-        
+
         if (dto.getTotalPrice() <= 0) {
             throw new IllegalArgumentException("El precio no puede ser menor o igual a cero");
         }
-        
+
         Pizza pizza = new Pizza();
         pizza.setName(dto.getName());
         pizza.setPrice(dto.getTotalPrice());
@@ -35,6 +36,7 @@ public class PizzaService {
 
         return pizzaRepository.save(pizza);
     }
+*/
 
     public Pizza saveMenuPizza(PizzaDTO dto) {
     if (dto.getName() == null || dto.getName().trim().isEmpty()) {
