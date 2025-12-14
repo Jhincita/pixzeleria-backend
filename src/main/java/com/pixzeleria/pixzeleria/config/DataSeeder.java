@@ -26,7 +26,51 @@ public class DataSeeder implements CommandLineRunner {
     private final OrderRepository orderRepository;
 
     @Override
+<<<<<<< HEAD
     public void run(String...  args) {
+=======
+    public void run(String... args) throws Exception {
+
+        // 1. Categorías
+        if (categoryRepository.count() == 0) {
+            Category pizzas = new Category(); pizzas.setName("Pizzas");
+            Category bebidas = new Category(); bebidas.setName("Bebidas");
+            Category ingredientes = new Category(); ingredientes.setName("Ingredientes");
+
+            categoryRepository.saveAll(Arrays.asList(pizzas, bebidas, ingredientes));
+            System.out.println("✅ Categorías cargadas");
+        }
+//
+//        orderRepository.deleteAll();
+//        pizzaRepository.deleteAll();
+//        ingredientRepository.deleteAll();
+        // 2. Ingredientes
+        if (ingredientRepository.count() == 0) {
+            String baseUrl = "https://pub-3108682005f34a1e90099e4d00f82f95.r2.dev/buildyourpizza/"; // de cloudflare
+
+            Ingredient i1 = new Ingredient(); i1.setName("Masa Tradicional"); i1.setStock(250); i1.setImageUrl(baseUrl + "masatradicional.svg");
+            Ingredient i2 = new Ingredient(); i2.setName("Salsa de Tomate"); i2.setStock(250); i2.setImageUrl(baseUrl + "tomatosauce.svg");
+            Ingredient i3 = new Ingredient(); i3.setName("Queso Mozzarella"); i3.setStock(250); i3.setImageUrl(baseUrl + "gratedcheese.svg");
+            Ingredient i4 = new Ingredient(); i4.setName("Pepperoni"); i4.setStock(250); i4.setImageUrl(baseUrl + "pepperoni.svg");
+            Ingredient i5 = new Ingredient(); i5.setName("Piña"); i5.setStock(250); i5.setImageUrl(baseUrl + "pineapple.svg");
+            Ingredient i6 = new Ingredient(); i6.setName("Prosciutto"); i6.setStock(250);  i6.setImageUrl(baseUrl + "prosciutto.svg");
+            Ingredient i7 = new Ingredient(); i7.setName("Pistacchio"); i7.setStock(250); // i7.setImageUrl(baseUrl + "pistacchio.svg");
+            Ingredient i8 = new Ingredient(); i8.setName("Rúgula"); i8.setStock(250); i8.setImageUrl(baseUrl + "rgla.svg");
+            Ingredient i9 = new Ingredient(); i9.setName("Tomates Cherry"); i9.setStock(250); i9.setImageUrl(baseUrl + "tomato.svg");
+            Ingredient i10 = new Ingredient(); i10.setName("Mozzarella di Bufala"); i10.setStock(250); i10.setImageUrl(baseUrl + "buffala.svg");
+            Ingredient i11 = new Ingredient(); i11.setName("Albahaca"); i11.setStock(250); i11.setImageUrl(baseUrl + "albahaca.svg");
+            Ingredient i12 = new Ingredient(); i12.setName("Cebolla"); i12.setStock(250); i12.setImageUrl(baseUrl + "onion.svg");
+            Ingredient i13 = new Ingredient(); i13.setName("Salsa BBQ"); i13.setStock(250); i13.setImageUrl(baseUrl + "bbq.svg");
+
+
+            ingredientRepository.saveAll(Arrays.asList(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13));
+            System.out.println("✅ Ingredientes cargados");
+        }
+
+        // 3. ADMIN (SECCIÓN CORREGIDA) 🛠️
+        // Buscamos si existe, si no, creamos uno nuevo
+        User admin = userRepository.findByUsername("admin").orElse(new User());
+>>>>>>> 62eda0c (arreglando orderpizza dto)
         
         try {
             System.out.println("🚀 Iniciando DataSeeder...");
