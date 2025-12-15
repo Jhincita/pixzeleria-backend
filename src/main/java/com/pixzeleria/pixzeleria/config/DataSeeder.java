@@ -47,79 +47,126 @@ public class DataSeeder implements CommandLineRunner {
             if (ingredientRepository.count() == 0) {
                 String baseUrl = "https://pub-3108682005f34a1e90099e4d00f82f95.r2.dev/buildyourpizza/";
 
-                Ingredient i1 = new Ingredient();
-                i1.setName("Masa Tradicional");
-                i1.setStock(250);
-                i1.setImageUrl(baseUrl + "masatradicional.svg");
+                // ========== MASAS ==========
+                Ingredient masa1 = new Ingredient();
+                masa1.setName("Masa Tradicional");
+                masa1.setStock(250);
+                masa1.setType("masa");
+                masa1.setPrice(0);
+                masa1.setImageUrl(baseUrl + "masatradicional.svg");
 
-                Ingredient i2 = new Ingredient();
-                i2.setName("Salsa de Tomate");
-                i2.setStock(250);
-                i2.setImageUrl(baseUrl + "tomatosauce.svg");
+                Ingredient masa2 = new Ingredient();
+                masa2.setName("Masa Delgada");
+                masa2.setStock(250);
+                masa2.setType("masa");
+                masa2.setPrice(500);
+                masa2.setImageUrl(baseUrl + "masatradicional.svg");
 
-                Ingredient i3 = new Ingredient();
-                i3.setName("Queso Mozzarella");
-                i3.setStock(250);
-                i3.setImageUrl(baseUrl + "gratedcheese.svg");
+                // ========== SALSAS ==========
+                Ingredient salsa1 = new Ingredient();
+                salsa1.setName("Salsa de Tomate");
+                salsa1.setStock(250);
+                salsa1.setType("salsa");
+                salsa1.setPrice(0);
+                salsa1.setColor("#E53935");
+                salsa1.setImageUrl(baseUrl + "tomatosauce.svg");
 
-                Ingredient i4 = new Ingredient();
-                i4.setName("Pepperoni");
-                i4.setStock(250);
-                i4.setImageUrl(baseUrl + "pepperoni.svg");
+                Ingredient salsa2 = new Ingredient();
+                salsa2.setName("Salsa BBQ");
+                salsa2.setStock(250);
+                salsa2.setType("salsa");
+                salsa2.setPrice(500);
+                salsa2.setColor("#5D4037");
+                salsa2.setImageUrl(baseUrl + "bbq.svg");
 
-                Ingredient i5 = new Ingredient();
-                i5.setName("Piña");
-                i5.setStock(250);
-                i5.setImageUrl(baseUrl + "pineapple.svg");
+                Ingredient salsa3 = new Ingredient();
+                salsa3.setName("Salsa Alfredo");
+                salsa3.setStock(250);
+                salsa3.setType("salsa");
+                salsa3.setPrice(500);
+                salsa3.setColor("#F5F5DC");
+                salsa3.setImageUrl(baseUrl + "tomatosauce.svg");
 
-                Ingredient i6 = new Ingredient();
-                i6.setName("Prosciutto");
-                i6.setStock(250);
-                i6.setImageUrl(baseUrl + "prosciutto.svg");
+                // ========== TOPPINGS ==========
+                Ingredient t1 = new Ingredient();
+                t1.setName("Queso Mozzarella");
+                t1.setStock(250);
+                t1.setType("topping");
+                t1.setPrice(500);
+                t1.setImageUrl(baseUrl + "gratedcheese.svg");
 
-                Ingredient i7 = new Ingredient();
-                i7.setName("Pistacchio");
-                i7.setStock(250);
-                i7.setImageUrl(baseUrl + "pistacchio.svg");
+                Ingredient t2 = new Ingredient();
+                t2.setName("Pepperoni");
+                t2.setStock(250);
+                t2.setType("topping");
+                t2.setPrice(500);
+                t2.setImageUrl(baseUrl + "pepperoni.svg");
 
-                Ingredient i8 = new Ingredient();
-                i8.setName("Rúgula");
-                i8.setStock(250);
-                i8.setImageUrl(baseUrl + "rgla.svg");
+                Ingredient t3 = new Ingredient();
+                t3.setName("Piña");
+                t3.setStock(250);
+                t3.setType("topping");
+                t3.setPrice(500);
+                t3.setImageUrl(baseUrl + "pineapple.svg");
 
-                Ingredient i9 = new Ingredient();
-                i9.setName("Tomates Cherry");
-                i9.setStock(250);
-                i9.setImageUrl(baseUrl + "tomato.svg");
+                Ingredient t4 = new Ingredient();
+                t4.setName("Prosciutto");
+                t4.setStock(250);
+                t4.setType("topping");
+                t4.setPrice(500);
+                t4.setImageUrl(baseUrl + "prosciutto.svg");
 
-                Ingredient i10 = new Ingredient();
-                i10.setName("Mozzarella di Bufala");
-                i10.setStock(250);
-                i10.setImageUrl(baseUrl + "buffala.svg");
+                Ingredient t5 = new Ingredient();
+                t5.setName("Pistacchio");
+                t5.setStock(250);
+                t5.setType("topping");
+                t5.setPrice(500);
+                t5.setImageUrl(baseUrl + "pistacchio.svg");
 
-                Ingredient i11 = new Ingredient();
-                i11.setName("Albahaca");
-                i11.setStock(250);
-                i11.setImageUrl(baseUrl + "albahaca.svg");
+                Ingredient t6 = new Ingredient();
+                t6.setName("Rúgula");
+                t6.setStock(250);
+                t6.setType("topping");
+                t6.setPrice(500);
+                t6.setImageUrl(baseUrl + "rgla.svg");
 
-                Ingredient i12 = new Ingredient();
-                i12.setName("Cebolla");
-                i12.setStock(250);
-                i12.setImageUrl(baseUrl + "onion.svg");
+                Ingredient t7 = new Ingredient();
+                t7.setName("Tomates Cherry");
+                t7.setStock(250);
+                t7.setType("topping");
+                t7.setPrice(500);
+                t7.setImageUrl(baseUrl + "tomato.svg");
 
-                Ingredient i13 = new Ingredient();
-                i13.setName("Salsa BBQ");
-                i13.setStock(250);
-                i13.setImageUrl(baseUrl + "bbq.svg");
+                Ingredient t8 = new Ingredient();
+                t8.setName("Mozzarella di Bufala");
+                t8.setStock(250);
+                t8.setType("topping");
+                t8.setPrice(1000);
+                t8.setImageUrl(baseUrl + "buffala.svg");
+
+                Ingredient t9 = new Ingredient();
+                t9.setName("Albahaca");
+                t9.setStock(250);
+                t9.setType("topping");
+                t9.setPrice(300);
+                t9.setImageUrl(baseUrl + "albahaca.svg");
+
+                Ingredient t10 = new Ingredient();
+                t10.setName("Cebolla");
+                t10.setStock(250);
+                t10.setType("topping");
+                t10.setPrice(300);
+                t10.setImageUrl(baseUrl + "onion.svg");
 
                 ingredientRepository.saveAll(Arrays.asList(
-                        i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13
+                        masa1, masa2,
+                        salsa1, salsa2, salsa3,
+                        t1, t2, t3, t4, t5, t6, t7, t8, t9, t10
                 ));
-                System.out.println("✅ Ingredientes cargados: 13 ingredientes");
+                System.out.println("✅ Ingredientes cargados: 2 masas, 3 salsas, 10 toppings");
             } else {
                 System.out.println("ℹ️ Ingredientes ya existen, saltando...");
             }
-
             // 3. ADMIN
             User admin = userRepository.findByUsername("admin").orElse(null);
 

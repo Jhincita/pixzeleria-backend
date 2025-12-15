@@ -21,4 +21,8 @@ public class Ingredient {
     private String name;
     private int stock;
     private String imageUrl;
+
+    private String type;   // 'masa', 'salsa', or 'topping'
+    private String color;  // For salsas (hex color like '#E53935')
+    private int price;
 }
