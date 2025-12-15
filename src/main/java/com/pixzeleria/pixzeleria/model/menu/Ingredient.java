@@ -1,12 +1,12 @@
 package com.pixzeleria.pixzeleria.model.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence. Entity;
-import jakarta.persistence. GeneratedValue;
-import jakarta. persistence.GenerationType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok. Setter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -22,7 +22,8 @@ public class Ingredient {
     private int stock;
     private String imageUrl;
 
+    // NEW FIELDS for pizza builder
     private String type;   // 'masa', 'salsa', or 'topping'
     private String color;  // For salsas (hex color like '#E53935')
-    private int price;
+    private int price;     // Price in CLP (e.g., 500)
 }
