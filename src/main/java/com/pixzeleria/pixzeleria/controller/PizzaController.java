@@ -16,15 +16,10 @@ public class PizzaController {
 
     private final PizzaService pizzaService;
 
-    @PostMapping("/custom")
-    public ResponseEntity<Pizza> createCustomPizza(@RequestBody PizzaDTO dto) {
-        Pizza pizza = pizzaService.createCustomPizza(dto);
-        return ResponseEntity.ok(pizza);
-    }
+    // ============ ENDPOINTS DEL MENÚ (Admin) ============
 
     @PostMapping
     public ResponseEntity<Pizza> createMenuPizza(@RequestBody PizzaDTO dto) {
-        // Si te sale error aquí en 'saveMenuPizza', es que te falta actualizar PizzaService también
         return ResponseEntity.ok(pizzaService.saveMenuPizza(dto));
     }
 
@@ -40,7 +35,8 @@ public class PizzaController {
         return ResponseEntity.noContent().build();
     }
 
-    // Endpoint público (Ver menú)
+    // ============ ENDPOINTS PÚBLICOS (Ver menú) ============
+
     @GetMapping
     public ResponseEntity<List<Pizza>> getAllPizzas() {
         return ResponseEntity.ok(pizzaService.getAllPizzas());
@@ -52,4 +48,5 @@ public class PizzaController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
 }
