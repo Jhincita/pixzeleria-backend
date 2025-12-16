@@ -71,6 +71,9 @@ public class IngredientController {
         dto.setName(entity.getName());
         dto.setStock(entity.getStock());
         dto.setImageUrl(entity.getImageUrl());  // ADD THIS
+        dto.setPrice(entity.getPrice());
+        dto.setType(entity.getType());
+        dto.setColor(entity.getColor());
         return dto;
     }
 
@@ -78,6 +81,9 @@ public class IngredientController {
         Ingredient entity = new Ingredient();
         entity.setName(dto.getName());
         entity.setStock(dto.getStock());
+        entity.setImageUrl(dto.getImageUrl());
+        entity.setColor(dto.getColor());
+        entity.setType(dto.getType());
         return entity;
     }
 
