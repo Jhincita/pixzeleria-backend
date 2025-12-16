@@ -183,89 +183,82 @@ public class DataSeeder implements CommandLineRunner {
             } else {
                 System.out.println("ℹ️ Usuario Admin ya existe");
             }
-
-            // Pizzas del Menú (solo si no existen)
+// Pizzas del Menú (solo si no existen)
             if (pizzaRepository.count() == 0) {
                 System.out.println("📦 Cargando pizzas del menú...");
 
-                Ingredient masa = ingredientRepository.findByName("Masa Tradicional");
-                Ingredient salsa = ingredientRepository.findByName("Salsa de Tomate");
-                Ingredient queso = ingredientRepository.findByName("Queso Mozzarella");
-                Ingredient pepperoni = ingredientRepository.findByName("Pepperoni");
-                Ingredient prosciutto = ingredientRepository.findByName("Prosciutto");
-                Ingredient pistacchio = ingredientRepository.findByName("Pistacchio");
-                Ingredient rugula = ingredientRepository.findByName("Rúgula");
-                Ingredient tomatesCherry = ingredientRepository.findByName("Tomates Cherry");
-                Ingredient bufala = ingredientRepository.findByName("Mozzarella di Bufala");
-                Ingredient albahaca = ingredientRepository.findByName("Albahaca");
+                var ingredientMap = ingredientRepository.findAll()
+                        .stream()
+                        .collect(java.util.stream.Collectors.toMap(
+                                Ingredient::getName,
+                                i -> i
+                        ));
+
+                Ingredient masa = ingredientMap.get("Masa Tradicional");
+                Ingredient salsa = ingredientMap.get("Salsa de Tomate");
+                Ingredient queso = ingredientMap.get("Queso Mozzarella");
+                Ingredient pepperoni = ingredientMap.get("Pepperoni");
+                Ingredient prosciutto = ingredientMap.get("Prosciutto");
+                Ingredient pistacchio = ingredientMap.get("Pistacchio");
+                Ingredient rugula = ingredientMap.get("Rúgula");
+                Ingredient tomatesCherry = ingredientMap.get("Tomates Cherry");
+                Ingredient bufala = ingredientMap.get("Mozzarella di Bufala");
+                Ingredient albahaca = ingredientMap.get("Albahaca");
+
+                // 🔥 Hard fail if something is missing
+                if (masa == null || salsa == null || queso == null) {
+                    throw new IllegalStateException("❌ Ingredientes base faltantes. Seeder abortado.");
+                }
 
                 String pizzaBaseUrl = "https://pub-3108682005f34a1e90099e4d00f82f95.r2.dev/menu_pizzas/";
 
-                // Margherita
                 Pizza p1 = new Pizza();
                 p1.setName("Pizza Margherita");
                 p1.setPrice(8000);
                 p1.setSize("MEDIUM");
                 p1.setImageUrl(pizzaBaseUrl + "pizzamargherita.png");
-                if (masa != null && salsa != null && queso != null && albahaca != null) {
-                    p1.setIngredients(Arrays.asList(masa, salsa, queso, albahaca));
-                }
+                p1.setIngredients(Arrays.asList(masa, salsa, queso, albahaca));
 
-                // Prosciutto Pistacchio
                 Pizza p2 = new Pizza();
                 p2.setName("Pizza Prosciutto Pistacchio");
                 p2.setPrice(10000);
                 p2.setSize("MEDIUM");
                 p2.setImageUrl(pizzaBaseUrl + "prosciuttopistaccio.png");
-                if (masa != null && salsa != null && queso != null && prosciutto != null && pistacchio != null) {
-                    p2.setIngredients(Arrays.asList(masa, salsa, queso, prosciutto, pistacchio));
-                }
+                p2.setIngredients(Arrays.asList(masa, salsa, queso, prosciutto, pistacchio));
 
-                // Pepperoni
                 Pizza p3 = new Pizza();
                 p3.setName("Pizza Pepperoni");
                 p3.setPrice(9000);
                 p3.setSize("MEDIUM");
                 p3.setImageUrl(pizzaBaseUrl + "pepperoni.png");
-                if (masa != null && salsa != null && queso != null && pepperoni != null) {
-                    p3.setIngredients(Arrays.asList(masa, salsa, queso, pepperoni));
-                }
+                p3.setIngredients(Arrays.asList(masa, salsa, queso, pepperoni));
 
-                // Prosciutto Rugula
                 Pizza p4 = new Pizza();
                 p4.setName("Pizza Prosciutto Rugula");
                 p4.setPrice(10000);
                 p4.setSize("MEDIUM");
                 p4.setImageUrl(pizzaBaseUrl + "prosciuttorugula.png");
-                if (masa != null && salsa != null && queso != null && prosciutto != null && rugula != null) {
-                    p4.setIngredients(Arrays.asList(masa, salsa, queso, prosciutto, rugula));
-                }
+                p4.setIngredients(Arrays.asList(masa, salsa, queso, prosciutto, rugula));
 
-                // Datterini
                 Pizza p5 = new Pizza();
                 p5.setName("Pizza Datterini");
                 p5.setPrice(9000);
                 p5.setSize("MEDIUM");
                 p5.setImageUrl(pizzaBaseUrl + "pizzadatterini.png");
-                if (masa != null && salsa != null && queso != null && tomatesCherry != null) {
-                    p5.setIngredients(Arrays.asList(masa, salsa, queso, tomatesCherry));
-                }
+                p5.setIngredients(Arrays.asList(masa, salsa, queso, tomatesCherry));
 
-                // Buffalina
                 Pizza p6 = new Pizza();
                 p6.setName("Pizza Buffalina");
                 p6.setPrice(10000);
                 p6.setSize("MEDIUM");
                 p6.setImageUrl(pizzaBaseUrl + "pizzabuffalina.png");
-                if (masa != null && salsa != null && bufala != null && albahaca != null) {
-                    p6.setIngredients(Arrays.asList(masa, salsa, bufala, albahaca));
-                }
+                p6.setIngredients(Arrays.asList(masa, salsa, bufala, albahaca));
 
                 pizzaRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));
-                System.out.println("✅ Pizzas cargadas: 6 pizzas con nombre y precio");
-            } else {
-                System.out.println("ℹ️ Pizzas ya existen en la BD: " + pizzaRepository.count() + " pizzas");
+
+                System.out.println("✅ Pizzas cargadas correctamente con ingredientes reales");
             }
+
 
             // Clientes de prueba
             if (userRepository.findByUsername("cliente1").isEmpty()) {
