@@ -25,6 +25,9 @@ public class IngredientService {
         ingredient.setName(dto.getName());
         ingredient.setStock(dto.getStock());
         ingredient.setImageUrl(dto.getImageUrl());
+        ingredient.setColor(dto.getColor());
+        ingredient.setPrice(dto.getPrice());
+        ingredient.setType(dto.getType());
         return repository.save(ingredient);
     }
     // read
